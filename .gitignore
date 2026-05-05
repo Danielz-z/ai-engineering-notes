@@ -4,3 +4,6 @@ vscode-ssh-proxy/
 
 # IDE metadata.
 .idea/
+
+# Keep the public repository focused on flat Markdown notes.
+*.pdf

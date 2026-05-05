@@ -40,6 +40,12 @@ Configure Claude Code to use GLM-compatible models directly or through CC Switch
 
 [claude_glm_full_guide.md](claude_glm_full_guide.md)
 
+### AI-Powered Academic Writing Workflow
+
+Use Overleaf, GitHub, local LaTeX tooling, and AI coding agents as a structured academic writing pipeline.
+
+[ai_paper_workflow.md](ai_paper_workflow.md)
+
 ## Notes About This Repository
 
 - The notes are based on personal practice and real setup problems.
