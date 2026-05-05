@@ -18,7 +18,8 @@ Convert Codex chat logs into structured experiment logs and README.
 ### 2. Codex Proxy Setup
 Run Codex on remote servers without internet access using SSH + proxy.
 
-👉 skills/codex_proxy_setup.md
+👉 codex_proxy_setup.md (Chinese)
+👉 codex_proxy_setup_en.md (English)
 
 ---
 
