@@ -8,46 +8,46 @@ I will keep updating this repo.
 
 ## Skills / Notes
 
-### 1. Codex → README / Experiment Log
+### 1. Codex to README / Experiment Log
 Convert Codex chat logs into structured experiment logs and README.
 
-👉 skills/codex_to_readme.md
+👉 [codex_to_readme_skill.md](codex_to_readme_skill.md)
 
 ---
 
 ### 2. Codex Proxy Setup
 Run Codex on remote servers without internet access using SSH + proxy.
 
-👉 codex_proxy_setup.md (Chinese)
-👉 codex_proxy_setup_en.md (English)
+👉 [codex_proxy_setup.md](codex_proxy_setup.md) (Chinese)
+👉 [codex_proxy_setup_en.md](codex_proxy_setup_en.md) (English)
 
 ---
 
 ### 3. Codex Log Tool
 Parse `.jsonl` logs into readable markdown (experiment logs).
 
-👉 skills/codex_log_tool.md
+👉 [codex_log_tool.md](codex_log_tool.md)
 
 ---
 
 ### 4. VSCode Remote SSH Proxy
 Fix remote development issues (Copilot / pip / git not working).
 
-👉 skills/vscode_ssh_proxy.md
+👉 [vscode-ssh-proxy.md](vscode-ssh-proxy.md)
 
 ---
 
 ### 5. Bash / WSL / PowerShell Summary
 Basic command-line environment understanding.
 
-👉 skills/bash_wsl_summary.md
+👉 [bash_wsl_cmd_powershell_summary.md](bash_wsl_cmd_powershell_summary.md)
 
 ---
 
 ### 6. Claude + GLM Setup
 How to configure Claude Code with GLM models.
 
-👉 skills/claude_glm_guide.md
+👉 [claude_glm_full_guide.md](claude_glm_full_guide.md)
 
 ---
 
