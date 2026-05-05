@@ -1,82 +1,119 @@
-# Codex CLI + 远程服务器 + 本地代理 完整配置指南
+# Codex CLI Remote Server Proxy Setup
 
-## 一、目标
+## Objective
 
-在无 sudo 权限 + 服务器无法直接访问外网的情况下，实现：
+This guide explains how to run Codex CLI on a remote Linux server when:
 
-本地代理 → SSH 反向隧道 → 服务器 → npm → Codex CLI
+- The server has no direct internet access.
+- The account has no sudo privileges.
+- npm, Codex, or other tools need access to external package registries.
 
-最终效果：
-- 在远程服务器运行 Codex
-- 所有请求通过本地代理转发
-- 避免 reconnecting / ECONNREFUSED
+The solution is:
 
----
+```text
+Local proxy -> SSH reverse tunnel -> Remote server -> npm -> Codex CLI
+```
 
-## 二、系统架构
+Final result:
 
-[本地电脑]
-  代理(127.0.0.1:7897)
-        ↓
-SSH -R
-        ↓
-[服务器]
+- Codex runs on the remote server.
+- Network requests are forwarded through the local proxy.
+- Common `reconnecting` and `ECONNREFUSED` issues are avoided.
+
+## Architecture
+
+```text
+Local machine
+  Proxy: 127.0.0.1:7897
+        |
+        | ssh -R
+        v
+Remote server
   127.0.0.1:7897
-        ↓
-npm / codex
+        |
+        v
+npm / Codex
+```
 
----
+## Setup
 
-## 三、核心步骤
+### 1. Start the SSH Reverse Tunnel
 
-### 1. 本地执行
+Run this command on the local machine:
 
+```bash
 ssh -R 7897:127.0.0.1:7897 Gold_Server
+```
 
----
+Keep this SSH session alive while using Codex on the remote server.
 
-### 2. 服务器设置代理
+### 2. Configure Proxy Variables on the Remote Server
 
+Run these commands on the remote server:
+
+```bash
 export http_proxy=http://127.0.0.1:7897
 export https_proxy=http://127.0.0.1:7897
 export ALL_PROXY=socks5h://127.0.0.1:7897
+```
 
----
+### 3. Verify Connectivity
 
-### 3. 验证
-
+```bash
 curl https://registry.npmjs.org
+```
 
----
+If the request returns package registry data, the proxy path is working.
 
-### 4. 无 sudo 安装
+### 4. Install npm Packages Without sudo
 
+```bash
 mkdir -p ~/.npm-global
 npm config set prefix '~/.npm-global'
 echo 'export PATH=$HOME/.npm-global/bin:$PATH' >> ~/.bashrc
 source ~/.bashrc
+```
 
----
+### 5. Install Codex CLI
 
-### 5. 安装
-
+```bash
 npm install -g @openai/codex
+```
 
----
+### 6. Run Codex
 
-### 6. 运行
-
+```bash
 codex
+```
 
----
+## Common Issues
 
-## 四、关键约束
+### `ECONNREFUSED`
 
-- SSH 不能断
-- 本地代理必须开
+The proxy is unreachable. Check whether the local proxy is running and whether the SSH tunnel is still connected.
 
----
+### `Permission denied (publickey)`
 
-## 五、总结
+The SSH key or server login configuration is wrong. Fix SSH authentication before debugging the proxy.
 
-通过 SSH 反向代理，将本地代理能力提供给服务器，从而在受限环境中运行 Codex。
+### `EACCES`
+
+npm is trying to write to a system directory. Use the user-level npm prefix shown above.
+
+### `command not found`
+
+The npm global bin directory is not in `PATH`. Reload the shell or run `source ~/.bashrc`.
+
+### `reconnecting`
+
+The proxy chain is broken. Check the local proxy, SSH tunnel, and remote proxy environment variables.
+
+## Key Constraints
+
+- The SSH session must stay connected.
+- The local proxy must remain running.
+- The remote server should use `127.0.0.1:7897`, because that address is created by the reverse tunnel.
+
+## Summary
+
+SSH reverse tunneling lets a restricted remote server reuse the local machine's proxy. This makes it possible to install and run Codex CLI even when the server itself cannot directly access the internet.

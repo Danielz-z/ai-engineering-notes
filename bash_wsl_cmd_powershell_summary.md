@@ -1,94 +1,104 @@
-# Bash / WSL / CMD / PowerShell 总结
+# Bash, WSL, CMD, and PowerShell Summary
 
-## 一、Bash 是什么
-Bash（Bourne Again Shell）= 脚本语言 + 命令解释器  
-用于自动化执行系统命令
+## What Is Bash?
 
-### 核心能力
-- 变量、条件、循环、函数
-- 适合写自动化脚本（pipeline）
+Bash, short for Bourne Again Shell, is both a command interpreter and a scripting language. It is commonly used to run system commands and automate workflows on Linux and Unix-like systems.
 
----
+Core capabilities:
 
-## 二、CMD vs PowerShell
+- Variables, conditions, loops, and functions.
+- Shell scripting for automation.
+- Pipeline-style command composition.
+
+## CMD vs PowerShell
 
 ### CMD
-- 输出：字符串（文本）
-- 特点：无结构，只能文本处理
 
-示例：
+CMD is the older Windows command-line shell.
+
+- Output is plain text.
+- Commands are simple but not strongly structured.
+- It is useful for legacy Windows commands and simple scripts.
+
+Example:
+
+```cmd
 dir | find "txt"
-
----
+```
 
 ### PowerShell
-- 输出：对象（结构化数据）
-- 特点：可以直接操作属性
 
-示例：
-Get-ChildItem | Where-Object {$_.Length -gt 1MB}
+PowerShell is the modern Windows shell and scripting environment.
 
----
+- Output is object-based rather than plain text.
+- Commands can operate directly on object properties.
+- It is better suited for Windows administration and structured automation.
 
-## 三、WSL 是什么
+Example:
 
-WSL（Windows Subsystem for Linux）  
-= 在 Windows 中运行 Linux 的环境
+```powershell
+Get-ChildItem | Where-Object { $_.Length -gt 1MB }
+```
 
-### 核心逻辑
-Windows → WSL → Linux → Bash
+## What Is WSL?
 
-### WSL2
-- 使用真实 Linux 内核
-- 接近真实 Linux（推荐）
+WSL, or Windows Subsystem for Linux, lets Windows run a Linux environment.
 
----
+Basic relationship:
 
-## 四、三者关系
+```text
+Windows -> WSL -> Linux -> Bash
+```
 
+WSL2 uses a real Linux kernel, so it behaves much more like a normal Linux system and is usually the recommended version.
+
+## Relationship Between the Tools
+
+```text
 Windows
-├── CMD
-├── PowerShell
-└── WSL
-     └── Bash
+|-- CMD
+|-- PowerShell
+`-- WSL
+    `-- Bash
+```
 
----
+## Common Interactions
 
-## 五、交互方式
+Enter WSL:
 
-进入 WSL：
+```powershell
 wsl
+```
 
-Windows 调用 Linux：
+Run a Linux command from Windows:
+
+```powershell
 wsl ls
+```
 
-Linux 调用 Windows：
+Open the current Linux directory in Windows Explorer:
+
+```bash
 explorer.exe .
+```
 
----
+## Capability Comparison
 
-## 六、能力对比
+| Capability | CMD | PowerShell | WSL |
+| --- | --- | --- | --- |
+| Windows operations | Yes | Yes | Indirect |
+| Linux programs | No | No | Yes |
+| Bash support | No | No | Yes |
 
-| 能力 | CMD | PowerShell | WSL |
-|------|-----|-----------|-----|
-| Windows操作 | √ | √ | 间接 |
-| Linux程序 | × | × | √ |
-| Bash支持 | × | × | √ |
+## Summary
 
----
+- Bash is best for Linux scripting and automation.
+- CMD is an older text-based Windows command shell.
+- PowerShell is the modern object-based Windows automation shell.
+- WSL is the best bridge when Linux tools are needed on Windows.
 
-## 七、总结
+## Practical Recommendation
 
-- Bash：自动化脚本语言
-- CMD：文本命令工具（旧）
-- PowerShell：对象命令工具（现代）
-- WSL：Linux环境
-
----
-
-## 八、建议（你的场景）
-
-推荐：
-- 本地：WSL + Bash
-- 服务器：Linux + Bash
-- Windows管理：PowerShell
+- Local development: WSL + Bash.
+- Remote servers: Linux + Bash.
+- Windows administration: PowerShell.

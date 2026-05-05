@@ -1,91 +1,66 @@
-# Codex 对话 → 实验日志 + README 自动生成工具（V1）
+# Codex JSONL to Experiment Log and README Tool
 
----
+## Overview
 
-## 一、功能概述
+This tool converts local Codex `.jsonl` session logs into structured Markdown documents:
 
-该工具用于将 Codex 本地 `.jsonl` 会话日志自动转换为结构化 Markdown 文档：
-
-```
+```text
 /output/
-  experiment_log.md     # 实验过程记录
-  README.md             # 项目总结
+  experiment_log.md
+  README.md
 ```
 
-适用于：
+It is useful for:
 
-* 科研实验记录（EEG / 机器学习 / 系统开发）
-* Prompt 管理与复用
-* 项目 README 自动生成
-* 开发过程追踪与复现
+- Research experiment records, such as EEG, machine learning, or system development.
+- Prompt management and reuse.
+- Automatic project README generation.
+- Tracking and reproducing development processes.
 
----
+## Core Idea
 
-## 二、核心原理
+Codex stores conversation history as JSONL session logs. This tool transforms those raw logs into readable Markdown.
 
-Codex 默认行为：
-
-```
-Codex = 记录对话日志（JSONL）
+```text
+Raw JSONL logs -> Structured Markdown documents
 ```
 
-本工具的作用：
+| Input | Output |
+| --- | --- |
+| Raw conversation logs | Experiment log |
+| Multi-turn interaction | Project summary |
+| Unstructured session data | Readable documentation |
 
-```
-JSONL（原始日志） → Markdown（结构化文档）
-```
+## Input Data
 
-即：
+Default Codex session path:
 
-| 输入     | 输出   |
-| ------ | ---- |
-| 原始对话日志 | 实验记录 |
-| 多轮交互   | 项目总结 |
-| 非结构化数据 | 可读文档 |
-
----
-
-## 三、输入数据
-
-默认路径：
-
-```
+```text
 ~/.codex/sessions/YYYY/MM/DD/rollout-*.jsonl
 ```
 
-数据格式：JSONL（每行一个 JSON）
+Data format:
 
-包含内容：
+- JSONL, one JSON object per line.
+- User messages.
+- Assistant messages.
+- Tool calls, depending on the Codex version and log format.
 
-* 用户输入（user）
-* 模型输出（assistant）
-* 工具调用（部分版本）
+## Output Format
 
----
-
-## 四、输出格式
-
-### 1. experiment_log.md
+### `experiment_log.md`
 
 ```markdown
-# 实验日志
+# Experiment Log
 
-## 用户
-xxx
-
-## Codex
-xxx
-
-## 用户
-xxx
+## User
+...
 
 ## Codex
-xxx
+...
 ```
 
----
-
-### 2. README.md
+### `README.md`
 
 ```markdown
 # Project Summary
@@ -103,9 +78,7 @@ xxx
 ...
 ```
 
----
-
-## 五、脚本代码（可直接运行）
+## Script
 
 ```python
 import json
@@ -131,7 +104,7 @@ def parse_jsonl(file_path):
         for line in f:
             try:
                 data = json.loads(line)
-            except:
+            except json.JSONDecodeError:
                 continue
 
             if data.get("type") == "message":
@@ -139,28 +112,28 @@ def parse_jsonl(file_path):
                 content = ""
 
                 if isinstance(data.get("content"), list):
-                    for c in data["content"]:
-                        if "text" in c:
-                            content += c["text"]
+                    for item in data["content"]:
+                        if "text" in item:
+                            content += item["text"]
 
                 messages.append({
                     "role": role,
-                    "content": content.strip()
+                    "content": content.strip(),
                 })
 
     return messages
 
 
 def build_experiment_log(messages):
-    md = "# 实验日志\n\n"
+    markdown = "# Experiment Log\n\n"
 
-    for msg in messages:
-        if msg["role"] == "user":
-            md += f"## 用户\n{msg['content']}\n\n"
-        elif msg["role"] == "assistant":
-            md += f"## Codex\n{msg['content']}\n\n"
+    for message in messages:
+        if message["role"] == "user":
+            markdown += f"## User\n{message['content']}\n\n"
+        elif message["role"] == "assistant":
+            markdown += f"## Codex\n{message['content']}\n\n"
 
-    return md
+    return markdown
 
 
 def summarize(messages):
@@ -171,17 +144,17 @@ def summarize(messages):
 # Project Summary
 
 ## Objectives
-{user_inputs[0] if user_inputs else "未知"}
+{user_inputs[0] if user_inputs else "Unknown"}
 
 ## Methods
-使用 Codex 进行代码生成与迭代开发
+Use Codex for code generation and iterative development.
 
 ## Results
-生成了 {len(assistant_outputs)} 条模型输出
+Generated {len(assistant_outputs)} assistant responses.
 
 ## Next Steps
-- 优化模块结构
-- 增加测试用例
+- Improve the module structure.
+- Add test cases.
 """
 
     return summary
@@ -197,118 +170,90 @@ def main():
 
     messages = parse_jsonl(file_path)
 
-    exp_log = build_experiment_log(messages)
+    experiment_log = build_experiment_log(messages)
     readme = summarize(messages)
 
     with open(f"{OUTPUT_DIR}/experiment_log.md", "w", encoding="utf-8") as f:
-        f.write(exp_log)
+        f.write(experiment_log)
 
     with open(f"{OUTPUT_DIR}/README.md", "w", encoding="utf-8") as f:
         f.write(readme)
 
-    print("Done. Output in ./output/")
+    print("Done. Output written to ./output/")
 
 
 if __name__ == "__main__":
     main()
 ```
 
----
-
-## 六、使用方法
+## Usage
 
 ```bash
 python codex_to_log.py
 ```
 
-执行后自动生成：
+After running the script, the output directory contains:
 
-```
+```text
 /output/
   experiment_log.md
   README.md
 ```
 
----
+## Recommended Project Structure
 
-## 七、推荐项目结构
-
-```
+```text
 project/
-  /logs/
+  logs/
     raw_jsonl/
     parsed_md/
-
-  /scripts/
+  scripts/
     codex_to_log.py
-
-  /output/
+  output/
 ```
 
----
+## Limitations
 
-## 八、限制与注意事项
+### JSONL Structure May Change
 
-### 1. JSONL 结构可能变化
+Different Codex versions may store session fields differently. The script includes basic error handling, but it is not guaranteed to support every future format.
 
-不同版本 Codex 日志字段可能不同
-→ 已做基础容错，但不保证完全兼容
+### Tool Call Details May Be Missing
 
----
+Some tool call information may not appear inside `message` entries.
 
-### 2. 工具调用可能缺失
+### Long Conversations May Be Truncated
 
-部分 tool_call 信息未包含在 message 中
+If the session log was truncated by the system, this tool cannot recover the missing context.
 
----
+## Use Cases
 
-### 3. 长对话可能被截断
+| Use case | Suitable |
+| --- | --- |
+| EEG experiment records | Yes |
+| Model development logs | Yes |
+| Prompt management | Yes |
+| Project README generation | Yes |
+| Early-stage paper material organization | Yes |
 
-属于系统限制，无法完全恢复完整上下文
+## Value
 
----
+- Automates experiment record generation.
+- Improves project reproducibility.
+- Reduces manual documentation work.
+- Makes development traces easier to review.
 
-## 九、适用场景
+## Future Improvements
 
-| 场景           | 是否适用 |
-| ------------ | ---- |
-| EEG 实验记录     | ✔    |
-| 模型开发日志       | ✔    |
-| Prompt 管理    | ✔    |
-| 项目 README 生成 | ✔    |
-| 论文素材整理（初级）   | ✔    |
+- Use an LLM to generate richer summaries.
+- Merge and analyze multiple sessions.
+- Extract model parameters automatically.
+- Generate paper-style method and experiment sections.
 
----
+## Conclusion
 
-## 十、核心价值
+Codex records the development conversation as JSONL. This tool converts those logs into structured Markdown:
 
-* 自动化实验记录
-* 提高项目复现能力
-* 减少手动整理成本
-* 提高开发效率
-
----
-
-## 十一、后续升级方向（V2）
-
-建议后续扩展：
-
-* 接入 GPT 自动生成总结
-* 多 session 合并分析
-* 自动提取模型参数
-* 自动生成论文 Method / Experiment
-
----
-
-## 十二、结论
-
-```
-Codex 只负责记录日志（JSONL）
-该工具负责将日志转化为结构化文档（Markdown）
-```
-
-实现效果：
-
-```
-Codex → JSONL → 实验日志 + README（自动生成）
+```text
+Codex -> JSONL -> Experiment log + README
 ```

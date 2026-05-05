@@ -1,102 +1,112 @@
-# Claude Code + GLM 配置与 CC Switch 对比（完整指南）
+# Claude Code and GLM Setup Guide
 
----
+## Objective
 
-## 一、目标
+This guide explains how to use Claude Code with GLM-compatible models on Windows. It covers:
 
-在 Windows 环境中实现：
+- Installing Claude Code CLI.
+- Connecting Claude Code to GLM, such as `glm-4.6`.
+- Understanding two integration approaches:
+  - Direct configuration through `settings.json`.
+  - Proxy-based routing through CC Switch.
 
-- 安装 Claude Code CLI
-- 接入 GLM（如 glm-4.6）
-- 理解两种接入方式：
-  - 直接配置（settings.json）
-  - CC Switch 代理方式
+## Environment Preparation
 
----
+### 1. Install Node.js
 
-## 二、环境准备
+Download Node.js from:
 
-### 1. 安装 Node.js
+```text
+https://nodejs.org/
+```
 
-https://nodejs.org/zh-cn/download
+If the `.msi` installer cannot be opened, check the Windows Installer service:
 
-#### 如果 .msi 无法打开
+1. Press `Win + R`.
+2. Run `services.msc`.
+3. Find `Windows Installer`.
+4. Right-click it and start the service.
 
-方法1（推荐）：
-1. Win + R
-2. 输入：
-   services.msc
-3. 找到：Windows Installer
-4. 右键 → 启动
+You can also install from an administrator command prompt:
 
-方法2（命令行）：
-1. Win + R → 输入：
-   cmd
-2. Ctrl + Shift + Enter（管理员）
-3. 执行：
-   msiexec /package 你的msi路径
-
-示例：
+```cmd
 msiexec /package D:\nodejs.msi
+```
 
-验证：
+Verify the installation:
+
+```bash
 node -v
 npm -v
+```
 
----
+### 2. Install Git
 
-### 2. 安装 Git
+Download Git for Windows from:
 
+```text
 https://git-scm.com/downloads/win
+```
 
-验证：
+Verify the installation:
+
+```bash
 git --version
+```
 
----
+## Install Claude Code
 
-## 三、安装 Claude Code
-
+```bash
 npm install -g @anthropic-ai/claude-code
+```
 
-验证：
+Verify:
+
+```bash
 claude
+```
 
----
+## Option 1: Direct GLM Configuration
 
-## 四、方案一：直接接入 GLM（无代理）
+### Idea
 
-### 原理
+Claude Code sends requests to a GLM-compatible endpoint that exposes an Anthropic-style API.
 
-Claude Code → GLM API（通过伪装 Anthropic 接口）
+```text
+Claude Code -> GLM API
+```
 
----
+### 1. Get an API Key
 
-### 配置步骤
+Create an API key from the Zhipu AI platform or another GLM-compatible provider.
 
-#### 1. 获取 API Key
-智谱 AI 平台创建 API Key
+### 2. Configure Environment Variables
 
-#### 2. 环境变量
+Use values similar to the following:
 
-ANTHROPIC_AUTH_TOKEN=你的key  
-ANTHROPIC_BASE_URL=https://api.z.ai/api/anthropic  
-API_TIMEOUT_MS=3000000  
-ANTHROPIC_DEFAULT_HAIKU_MODEL=glm-4.6  
-ANTHROPIC_DEFAULT_SONNET_MODEL=glm-4.6  
-ANTHROPIC_DEFAULT_OPUS_MODEL=glm-4.6  
+```text
+ANTHROPIC_AUTH_TOKEN=your_api_key
+ANTHROPIC_BASE_URL=https://api.z.ai/api/anthropic
+API_TIMEOUT_MS=3000000
+ANTHROPIC_DEFAULT_HAIKU_MODEL=glm-4.6
+ANTHROPIC_DEFAULT_SONNET_MODEL=glm-4.6
+ANTHROPIC_DEFAULT_OPUS_MODEL=glm-4.6
+```
 
----
+### 3. Update Claude Settings
 
-#### 3. 修改配置文件
+Edit:
 
-路径：
-C:\Users\你的用户名\.claude\settings.json
+```text
+C:\Users\<your-user-name>\.claude\settings.json
+```
 
-内容：
+Example:
 
+```json
 {
   "env": {
-    "ANTHROPIC_AUTH_TOKEN": "你的zai_api_key",
+    "ANTHROPIC_AUTH_TOKEN": "your_zai_api_key",
     "ANTHROPIC_BASE_URL": "https://api.z.ai/api/anthropic",
     "API_TIMEOUT_MS": "3000000",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-4.6",
@@ -104,102 +114,85 @@ C:\Users\你的用户名\.claude\settings.json
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-4.6"
   }
 }
+```
 
----
+## Option 2: Use CC Switch
 
-## 五、方案二：使用 CC Switch（推荐）
+### Idea
 
-### 原理
+CC Switch acts as a proxy and model router.
 
-Claude Code → CC Switch → GLM API
+```text
+Claude Code -> CC Switch -> GLM API
+```
 
----
+### Benefits
 
-### 特点
+- Supports switching between multiple models, such as GPT, GLM, and Gemini.
+- Adapts request formats automatically.
+- Provides UI-based management.
+- Is usually more stable for daily use.
 
-- 支持多模型切换（GPT / GLM / Gemini）
-- 自动适配接口
-- 提供 UI 管理
-- 更稳定
+## Comparison
 
----
+| Dimension | Direct Configuration | CC Switch |
+| --- | --- | --- |
+| Architecture | Direct API call | Proxy routing |
+| Latency | Lower | Slightly higher |
+| Stability | Medium | Higher |
+| Multi-model support | Limited | Supported |
+| Ease of use | Lower | Higher |
+| Extensibility | Lower | Higher |
 
-## 六、两种方案对比
+## Verification
 
-| 维度 | 直接配置 | CC Switch |
-|------|--------|----------|
-| 架构 | 直连 | 代理 |
-| 延迟 | 低 | 略高 |
-| 稳定性 | 中 | 高 |
-| 多模型 | 不支持 | 支持 |
-| 易用性 | 较低 | 高 |
-| 可扩展性 | 低 | 高 |
+Run:
 
----
-
-## 七、验证
-
-运行：
+```bash
 claude
+```
 
-测试：
-介绍一下你自己
+Test with a simple prompt:
 
-成功标志：
-- 出现 glm-4.6
-- 正常返回结果
+```text
+Introduce yourself briefly.
+```
 
----
+Successful signs:
 
-## 八、常见问题
+- The selected model is `glm-4.6`.
+- Claude Code returns a normal response.
 
-1. claude 命令无效  
-→ 检查 PATH  
+## Troubleshooting
 
-2. API 无响应  
-→ 检查余额 / 网络  
+### `claude` command not found
 
-3. 模型未切换  
-→ 重启终端  
+Check whether the npm global bin directory is in `PATH`.
 
-4. 401 / 403  
-→ API Key 错误  
+### No API response
 
----
+Check network access, account balance, and API endpoint configuration.
 
-## 九、关键理解（核心）
+### Model did not switch
 
-你当前架构：
+Restart the terminal after changing environment variables or settings.
 
-Claude Code（UI）
-↓
-CC Switch（代理）
-↓
-GLM（模型）
+### `401` or `403`
 
-本质是：
+The API key is wrong, expired, or not allowed to access the selected model.
 
-“协议适配 + API 转发”
+## Key Idea
 
----
+The setup is essentially:
 
-## 十、推荐策略
+```text
+Claude Code UI
+  -> protocol adapter or proxy
+  -> GLM model API
+```
 
-### 当前阶段
-使用 CC Switch（稳定 + 简单）
+In other words, the important part is protocol adaptation and API forwarding.
 
-### 进阶阶段
-自建 proxy server（FastAPI）
+## Recommendation
 
----
-
-## 十一、总结
-
-核心操作：
-
-替换 Claude API → 指向 GLM
-
-两种路径：
-
-1. 直接改配置（简单但不稳定）
-2. CC Switch（推荐，工程级方案）
+For daily use, CC Switch is usually easier and more stable. Direct configuration is simpler conceptually, but it can be less robust when switching models or providers.

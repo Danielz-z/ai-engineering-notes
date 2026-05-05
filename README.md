@@ -1,64 +1,47 @@
 # AI Engineering Notes
 
-This repo contains some practical problems I encountered during my internship and how I solved them.
-
-I will keep updating this repo.
-
----
-
-## Skills / Notes
-
-### 1. Codex to README / Experiment Log
-Convert Codex chat logs into structured experiment logs and README.
-
-👉 [codex_to_readme_skill.md](codex_to_readme_skill.md)
-
----
-
-### 2. Codex Proxy Setup
-Run Codex on remote servers without internet access using SSH + proxy.
-
-👉 [codex_proxy_setup.md](codex_proxy_setup.md) (Chinese)
-
----
-
-### 3. Codex Proxy Setup (English)
-Run Codex on remote servers without internet access using SSH reverse tunnel + local proxy.
-
-👉 [codex_proxy_setup_en.md](codex_proxy_setup_en.md)
-
----
-
-### 4. Codex Log Tool
-Parse `.jsonl` logs into readable markdown (experiment logs).
-
-👉 [codex_log_tool.md](codex_log_tool.md)
-
----
-
-### 5. VSCode Remote SSH Proxy
-Fix remote development issues (Copilot / pip / git not working).
-
-👉 [vscode-ssh-proxy.md](vscode-ssh-proxy.md)
-
----
-
-### 6. Bash / WSL / PowerShell Summary
-Basic command-line environment understanding.
-
-👉 [bash_wsl_cmd_powershell_summary.md](bash_wsl_cmd_powershell_summary.md)
-
----
-
-### 7. Claude + GLM Setup
-How to configure Claude Code with GLM models.
-
-👉 [claude_glm_full_guide.md](claude_glm_full_guide.md)
-
----
+This repository collects practical engineering notes from my local development and internship work. The notes focus on repeatable setup steps, debugging patterns, and small workflows that solved real problems.
 
 ## Notes
 
-- These are based on my personal experience
-- Some solutions may be environment-specific
-- Mainly for practical usage, not theoretical completeness
+### Codex Conversation to Experiment Log and README
+
+A reusable prompt and documentation workflow for turning Codex conversations, diffs, and commits into structured experiment logs and GitHub-ready README files.
+
+[codex_to_readme_skill.md](codex_to_readme_skill.md)
+
+### Codex CLI Remote Proxy Setup
+
+Run Codex CLI on a remote server without direct internet access or sudo permissions by using an SSH reverse tunnel and a local proxy.
+
+[codex_proxy_setup.md](codex_proxy_setup.md)
+
+### Codex Log Tool
+
+A small Python script that parses Codex `.jsonl` session logs into readable Markdown experiment logs and project summaries.
+
+[codex_log_tool.md](codex_log_tool.md)
+
+### VS Code Remote SSH Proxy
+
+Configure VS Code Remote SSH, Copilot, pip, git, and Hugging Face access on restricted remote servers through SSH remote forwarding.
+
+[vscode-ssh-proxy.md](vscode-ssh-proxy.md)
+
+### Bash, WSL, CMD, and PowerShell
+
+A short comparison of common Windows and Linux command-line environments and when to use each one.
+
+[bash_wsl_cmd_powershell_summary.md](bash_wsl_cmd_powershell_summary.md)
+
+### Claude Code and GLM Setup
+
+Configure Claude Code to use GLM-compatible models directly or through CC Switch, with notes on installation, environment variables, and troubleshooting.
+
+[claude_glm_full_guide.md](claude_glm_full_guide.md)
+
+## Notes About This Repository
+
+- The notes are based on personal practice and real setup problems.
+- Some commands are environment-specific and may need small adjustments.
+- The goal is practical reuse, not theoretical completeness.

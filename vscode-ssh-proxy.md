@@ -1,50 +1,52 @@
-# 🚀 VS Code Remote SSH Proxy
+# VS Code Remote SSH Proxy
 
-解决远程服务器无法访问外网的问题（Copilot / Codex / pip / git / HuggingFace）
+This note explains how to fix external network access for VS Code Remote SSH on a restricted remote server. The same setup can also help tools such as Copilot, Codex, pip, git, and Hugging Face downloads.
 
----
+## Problem
 
-## 📌 Overview
+Some remote servers, such as lab GPU nodes, cannot directly access the public internet. In that environment:
 
-当远程服务器（如实验室/4090/GPU节点）无法访问外网时，VS Code Remote SSH 插件（如 Copilot）和开发工具（pip / git）会失效。
+- VS Code extensions may fail.
+- Copilot may not connect.
+- `pip install`, `git clone`, and model downloads may time out.
 
-本方案通过：
+The solution is to let the remote server use the local machine's proxy through SSH remote forwarding.
 
-> **SSH RemoteForward + 本地代理**
+## Core Idea
 
-实现远程服务器“借用”本地网络能力。
-
----
-
-## 🧠 Core Idea
-
-```
-Remote Server → SSH Tunnel → Local Proxy → Internet
+```text
+Remote server -> SSH tunnel -> Local proxy -> Internet
 ```
 
----
+More specifically:
 
-## ⚙️ Requirements
-
-- 本地电脑可科学上网（Clash / V2Ray / SakuraCat 等）
-- 知道本地代理端口（例如：7897）
-- 已配置 SSH 连接远程服务器
-
----
-
-## 🛠️ Setup
-
----
-
-### 1. Configure SSH
-
-编辑本地：
-
+```text
+VS Code remote process
+  -> 127.0.0.1:6152 on the remote server
+  -> SSH RemoteForward
+  -> 127.0.0.1:7897 on the local machine
+  -> Internet
 ```
+
+## Requirements
+
+- The local machine can access the internet through a proxy, such as Clash, V2Ray, or another local proxy tool.
+- You know the local proxy port. In this example, it is `7897`.
+- SSH access to the remote server is already configured.
+
+## Setup
+
+### 1. Configure SSH on the Local Machine
+
+Edit:
+
+```text
 ~/.ssh/config
 ```
 
-```bash
+Example:
+
+```sshconfig
 Host 4090
     HostName 192.168.3.28
     User zhouzheng
@@ -53,25 +55,29 @@ Host 4090
     RemoteForward 6153 127.0.0.1:7897
 ```
 
----
+In this setup:
 
-### 2. Connect via SSH
+- `6152` is used as the remote HTTP proxy port.
+- `6153` is used as the remote SOCKS proxy port.
+- `7897` is the local proxy port.
+
+### 2. Connect Through the SSH Host Alias
 
 ```bash
 ssh 4090
 ```
 
-> ❗ 必须使用 `Host`，不能直接用 IP
+Use the configured `Host` alias. If you connect directly by IP address, the `RemoteForward` settings from the SSH config may not be applied.
 
----
+### 3. Configure VS Code on the Remote Server
 
-### 3. Configure VS Code (Remote)
-
-在远程服务器执行：
+Run this on the remote server:
 
 ```bash
 mkdir -p ~/.vscode-server/data/Machine
 ```
+
+Create or update:
 
 ```bash
 cat > ~/.vscode-server/data/Machine/settings.json << 'EOF'
@@ -89,104 +95,94 @@ cat > ~/.vscode-server/data/Machine/settings.json << 'EOF'
 EOF
 ```
 
----
+### 4. Verify the Proxy
 
-### 4. Verify
+Run this on the remote server:
 
 ```bash
 curl google.com -I -x http://127.0.0.1:6152
 ```
 
-Expected:
+Expected result:
 
-```
+```text
 HTTP/1.1 200 OK
-or
+```
+
+or:
+
+```text
 HTTP/1.1 301 Moved Permanently
 ```
 
----
-
 ### 5. Reload VS Code
 
+In VS Code:
+
+```text
+Ctrl + Shift + P -> Reload Window
 ```
-Ctrl + Shift + P → Reload Window
-```
 
----
+## Expected Result
 
-## ✅ Result
+After the setup works:
 
-成功后：
+- Copilot and Codex can connect.
+- `pip install` can reach external package indexes.
+- `git clone` works through the proxy.
+- Hugging Face downloads can use the forwarded proxy.
 
-- Copilot / Codex ✔
-- pip install ✔
-- git clone ✔
-- HuggingFace ✔
+## Troubleshooting
 
----
+### `curl` Times Out
 
-## 🔍 Troubleshooting
-
----
-
-### ❌ curl timeout
+Check whether the remote port is listening:
 
 ```bash
 netstat -tlnp | grep 6152
 ```
 
-- 无输出 → SSH 转发失败
-- 有输出 → 检查本地代理
+If there is no output, the SSH remote forwarding did not start. If there is output, check whether the local proxy is running.
 
----
+### `RemoteForward` Does Not Work
 
-### ❌ RemoteForward 不生效
+Common causes:
 
-原因：
+- The SSH connection did not use the configured host alias.
+- VS Code connected directly by IP instead of using the host entry.
+- The SSH session was restarted without the forwarding configuration.
 
-- 没使用 `ssh 4090`
-- VS Code 未使用 Host 连接
+### Copilot Does Not Work
 
----
+Check:
 
-### ❌ Copilot 不工作
+- Whether VS Code was reloaded.
+- Whether `settings.json` is in the remote VS Code server path.
+- Whether `remote.env` contains the proxy variables.
 
-检查：
+### Wrong Proxy Port
 
-- 是否执行 Reload Window
-- settings.json 是否正确
-- remote.env 是否存在
+Confirm the actual local proxy port. This note uses:
 
----
-
-### ❌ 端口错误
-
-确认本地代理端口：
-
-```
-7897（或你的实际端口）
+```text
+7897
 ```
 
----
+Replace it with the port used by your own proxy tool.
 
-## 📎 Notes
+## Notes
 
-- `curl` 默认不走代理，必须使用 `-x`
-- `ping` 无法验证代理
-- `.vscode-server` 路径不可更改
+- `curl` does not automatically use the proxy unless `-x` is provided or proxy environment variables are set.
+- `ping` cannot verify whether an HTTP or SOCKS proxy works.
+- The `.vscode-server` path is important because VS Code Remote reads machine-level settings from that location.
 
----
-
-## 📚 Keywords
+## Keywords
 
 - VS Code Remote SSH proxy
-- Copilot not working fix
-- SSH RemoteForward tutorial
-- Linux proxy via SSH
+- Copilot remote server proxy
+- SSH `RemoteForward`
+- Linux proxy through SSH
 
----
+## Summary
 
-## ⭐ Summary
-
-> Use SSH tunneling to give remote servers access to your local network.
+SSH remote forwarding lets a remote server borrow the local machine's network access. This is useful when a server can be reached through SSH but cannot directly access the public internet.

@@ -1,50 +1,48 @@
-# Codex → Experiment Log & README Skill
+# Codex to Experiment Log and README Skill
 
 ## Overview
-该 Skill 用于将 Codex 对话、代码修改记录（diff / commit）自动整理为：
-- 实验日志（Experiment Log）
-- 项目 README（可直接用于 GitHub）
 
-目标：将“开发过程”转化为“可复现的结构化文档”。
+This skill turns Codex conversations and code-change records, such as diffs or commits, into structured documentation:
 
----
+- An experiment log.
+- A GitHub-ready project README.
+
+The goal is to transform the development process into reproducible structured documents.
 
 ## Done Criteria
-- 输出包含完整实验日志（时间、任务、方法、修改、结果、问题）
-- 输出 README 可直接用于 GitHub 项目首页
-- 所有步骤具备可复现性（命令、流程明确）
-- 支持多轮实验追加记录
 
----
+- The output includes a complete experiment log with time, task, method, changes, results, and issues.
+- The generated README can be used directly as a GitHub project landing page.
+- All steps are reproducible, with clear commands and workflow descriptions.
+- Multi-round experiments can be appended over time.
 
 ## Input
-- codex_chat: Codex 对话记录（必须）
-- code_diff: 代码修改记录（可选）
-- project_name: 项目名称
-- task_description: 当前任务描述
 
----
+- `codex_chat`: Codex conversation log. Required.
+- `code_diff`: Code change record. Optional.
+- `project_name`: Project name.
+- `task_description`: Current task description.
 
 ## Output
-- experiment_log.md
-- README.md
 
----
+- `experiment_log.md`
+- `README.md`
 
 ## Workflow
 
-### Step 1: 信息抽取
-提取：
-- 任务目标（Task）
-- 方法（Method）
-- 修改内容（Changes）
-- 实验结果（Result）
-- 问题与修复（Issues）
+### Step 1: Extract Information
 
----
+Extract:
 
-### Step 2: 生成实验日志
+- Task objective.
+- Method.
+- Changes.
+- Result.
+- Issues and fixes.
 
+### Step 2: Generate the Experiment Log
+
+```markdown
 # Experiment Log
 
 ## [DATE]
@@ -63,18 +61,18 @@
 
 ### Issues
 {extracted_issues}
+```
 
----
+### Step 3: Generate the README
 
-### Step 3: 生成 README
-
+````markdown
 # {project_name}
 
 ## Overview
-项目目标与背景说明
+Explain the project goal and background.
 
 ## Pipeline
-数据 → 预处理 → 模型 → 输出
+Data -> preprocessing -> model -> output
 
 ## Usage
 ```bash
@@ -82,20 +80,22 @@ python main.py
 ```
 
 ## Results
-实验结果总结（指标/表现）
+Summarize the experiment results, metrics, and observed performance.
 
 ## Project Structure
+```text
 project/
-├── src/
-├── data/
-├── models/
-├── logs/
-└── README.md
+|-- src/
+|-- data/
+|-- models/
+|-- logs/
+`-- README.md
+```
+````
 
----
+## Prompt Template for Codex
 
-## Prompt Template（用于 Codex）
-
+```text
 You are a documentation agent.
 
 Goal:
@@ -110,7 +110,7 @@ Context:
 Constraints:
 - Must be reproducible
 - Must include pipeline
-- Must extract real changes (not guess)
+- Must extract real changes, not guesses
 
 Done when:
 - README is GitHub-ready
@@ -118,28 +118,30 @@ Done when:
 
 Input:
 {paste codex chat here}
+```
 
----
+## Automation Tip
 
-## 自动化建议
+Use Git history as additional input:
 
-结合 Git：
+```bash
 git log -p > diff.txt
+```
 
----
+## Multi-Round Experiment Log
 
-## 多轮实验记录
+```markdown
+# Experiment Log
 
-## Experiment Log
-
-### Day 1
+## Day 1
 ...
 
-### Day 2
+## Day 2
 ...
-
----
+```
 
 ## Summary
 
-Codex 对话 → 实验知识沉淀 → 可复现文档
+```text
+Codex conversation -> captured experiment knowledge -> reproducible documentation
+```
