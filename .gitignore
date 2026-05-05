@@ -1,0 +1,6 @@
+# Local duplicate source folders; published notes stay as flat Markdown files.
+some_knowledge/
+vscode-ssh-proxy/
+
+# IDE metadata.
+.idea/
