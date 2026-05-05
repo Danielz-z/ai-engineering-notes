@@ -19,32 +19,38 @@ Convert Codex chat logs into structured experiment logs and README.
 Run Codex on remote servers without internet access using SSH + proxy.
 
 👉 [codex_proxy_setup.md](codex_proxy_setup.md) (Chinese)
-👉 [codex_proxy_setup_en.md](codex_proxy_setup_en.md) (English)
 
 ---
 
-### 3. Codex Log Tool
+### 3. Codex Proxy Setup (English)
+Run Codex on remote servers without internet access using SSH reverse tunnel + local proxy.
+
+👉 [codex_proxy_setup_en.md](codex_proxy_setup_en.md)
+
+---
+
+### 4. Codex Log Tool
 Parse `.jsonl` logs into readable markdown (experiment logs).
 
 👉 [codex_log_tool.md](codex_log_tool.md)
 
 ---
 
-### 4. VSCode Remote SSH Proxy
+### 5. VSCode Remote SSH Proxy
 Fix remote development issues (Copilot / pip / git not working).
 
 👉 [vscode-ssh-proxy.md](vscode-ssh-proxy.md)
 
 ---
 
-### 5. Bash / WSL / PowerShell Summary
+### 6. Bash / WSL / PowerShell Summary
 Basic command-line environment understanding.
 
 👉 [bash_wsl_cmd_powershell_summary.md](bash_wsl_cmd_powershell_summary.md)
 
 ---
 
-### 6. Claude + GLM Setup
+### 7. Claude + GLM Setup
 How to configure Claude Code with GLM models.
 
 👉 [claude_glm_full_guide.md](claude_glm_full_guide.md)
