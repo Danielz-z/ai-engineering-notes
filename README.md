@@ -40,6 +40,12 @@ Configure Claude Code to use GLM-compatible models directly or through CC Switch
 
 [claude_glm_full_guide.md](claude_glm_full_guide.md)
 
+### Claude Code and Codex Plugin Setup
+
+Install and troubleshoot a Claude Code plugin workflow that uses the local Codex CLI as a reviewer and second-pass coding assistant.
+
+[codex_claude_plugin_setup.md](codex_claude_plugin_setup.md)
+
 ### AI-Powered Academic Writing Workflow
 
 Use Overleaf, GitHub, local LaTeX tooling, and AI coding agents as a structured academic writing pipeline.
