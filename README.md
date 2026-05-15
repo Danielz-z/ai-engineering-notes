@@ -46,6 +46,18 @@ Install and troubleshoot a Claude Code plugin workflow that uses the local Codex
 
 [codex_claude_plugin_setup.md](codex_claude_plugin_setup.md)
 
+### Amor Fati Personal AI Infrastructure
+
+Document a Docker-first personal website and AI infrastructure migration with Caddy, WordPress, FastAPI, and future agent services.
+
+[amorfati-ai-infra-readme.md](amorfati-ai-infra-readme.md)
+
+### DeepFace Robot Emotion Control
+
+Use local DeepFace emotion recognition to drive Astribot robot movement through a Windows, WSL, and direct motion API control chain.
+
+[deepface_robot_control.md](deepface_robot_control.md)
+
 ### AI-Powered Academic Writing Workflow
 
 Use Overleaf, GitHub, local LaTeX tooling, and AI coding agents as a structured academic writing pipeline.
