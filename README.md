@@ -64,6 +64,12 @@ Use Overleaf, GitHub, local LaTeX tooling, and AI coding agents as a structured 
 
 [ai_paper_workflow.md](ai_paper_workflow.md)
 
+### Fine-tuning π0.5 on Custom Aloha Pick Tasks
+ 
+Fine-tune the π0.5 vision-language-action model on bimanual robot manipulation tasks using the openpi framework, with LoRA fine-tuning, GPU resource management, and Weights & Biases offline training.
+
+[pi05_aloha_finetune.md](pi05_aloha_finetune.md)
+
 ## Notes About This Repository
 
 - The notes are based on personal practice and real setup problems.
