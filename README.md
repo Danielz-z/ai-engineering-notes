@@ -70,6 +70,12 @@ Fine-tune the π0.5 vision-language-action model on bimanual robot manipulation 
 
 [pi05_aloha_finetune.md](pi05_aloha_finetune.md)
 
+### OpenPI Inference Deployment on AgileX ALOHA
+
+Deploy OpenPI policy serving and run dual-arm Piper inference on an AgileX ALOHA platform, covering hardware bring-up, three-terminal startup, prompt switching, and a left-gripper failed-grasp recovery loop driven by joint feedback.
+
+[openpi_aloha_inference_deployment.md](openpi_aloha_inference_deployment.md)
+
 ## Notes About This Repository
 
 - The notes are based on personal practice and real setup problems.
