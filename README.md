@@ -88,6 +88,12 @@ A lightweight scaffold for repositories driven by a single coding agent, coverin
 
 [single_agent_project_template.md](single_agent_project_template.md)
 
+### Claude Code Session Bucket Consolidation
+
+Diagnose and merge a Claude Code conversation that fragmented across multiple `~/.claude/projects/` buckets due to PowerShell cwd differences, then pin future sessions to one directory with a `$PROFILE` auto-cd.
+
+[claude_code_session_bucket_consolidation.md](claude_code_session_bucket_consolidation.md)
+
 ## Notes About This Repository
 
 - The notes are based on personal practice and real setup problems.
