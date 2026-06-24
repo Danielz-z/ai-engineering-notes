@@ -76,6 +76,12 @@ Deploy OpenPI policy serving and run dual-arm Piper inference on an AgileX ALOHA
 
 [openpi_aloha_inference_deployment.md](openpi_aloha_inference_deployment.md)
 
+### Claude Code and Codex Project Template
+
+A reusable project scaffold for repositories where Claude Code implements changes and Codex performs independent diff review, covering shared rules, directory layout, workflow, and Definition of Done.
+
+[claude_code_codex_project_template.md](claude_code_codex_project_template.md)
+
 ## Notes About This Repository
 
 - The notes are based on personal practice and real setup problems.
