@@ -82,6 +82,12 @@ A reusable project scaffold for repositories where Claude Code implements change
 
 [claude_code_codex_project_template.md](claude_code_codex_project_template.md)
 
+### Single-Agent Project Template
+
+A lightweight scaffold for repositories driven by a single coding agent, covering `AGENTS.md` rules, directory layout, plan-implement-verify workflow, and Definition of Done.
+
+[single_agent_project_template.md](single_agent_project_template.md)
+
 ## Notes About This Repository
 
 - The notes are based on personal practice and real setup problems.
