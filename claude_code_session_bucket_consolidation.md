@@ -56,18 +56,16 @@ mv ~/.claude/projects/C--Users-asus/*.jsonl \
 rmdir ~/.claude/projects/C--Users-asus
 ```
 
-### Step 4 — Prevent recurrence with a PowerShell `$PROFILE` auto-cd
+### Step 4 — Prevent recurrence by cd'ing before each session
 
-Add to `$PROFILE` (e.g. `C:\Users\<user>\Documents\PowerShell\Microsoft.PowerShell_profile.ps1`):
+Before launching `claude`, switch into the project directory explicitly so the cwd matches the canonical bucket:
 
 ```powershell
-if (-not $env:CLAUDE_AUTO_CD) {
-    $env:CLAUDE_AUTO_CD = '1'
-    Set-Location 'C:\Users\asus\claude-main'
-}
+cd C:\Users\asus\claude-main
+claude
 ```
 
-This pins every new PowerShell (including admin) to the canonical project directory before `claude` reads its cwd, so all future sessions write to one bucket.
+Auto-cd via `$PROFILE` is technically possible but pins the default cwd of every PowerShell window, which interferes with multi-project workflows (e.g. opening a new shell directly into `Desktop\Thesis`). Manual `cd` is the more controllable default.
 
 ## 5. Verification
 
